@@ -1,0 +1,70 @@
+<project name="CleanBlackJack" default="distribute" basedir=".">
+    <description>
+        Build file for the clean code version of "mini-BlackJack"
+    </description>
+    
+ 
+	<property name="src" location="src/blackjack"/>
+	<property name="build" location="build"/>
+	<property name="distribute"  location="distribute"/>
+	<property name="report"  value="${build}/junitreport"/>
+	
+	<path id="junit.class.path">
+		<pathelement location="D:/Eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar" />
+		<pathelement location="${build}" />
+	</path>
+
+  <target name="init">
+  	<echo>begin init...</echo>
+  	<tstamp>
+	  <format property="TODAY_DE" pattern="HH-mm-ss" locale="de,DE"/>
+	</tstamp>
+	<echo>create build dir...</echo>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${report}"/>
+  </target>
+ 
+
+  <target name="compile" depends="init"
+        description="Kompilieren..." >
+    <echo>begin compile...</echo>
+    <javac srcdir="${src}" destdir="${build}">
+    	<classpath refid="junit.class.path" />
+    </javac>
+  </target>
+  
+   <target name="test" depends="compile"
+  	description="run unit tests">
+  	<junit printsummary="yes" haltonfailure="yes">
+
+	 	<classpath refid="junit.class.path" />
+	
+	   	<formatter type="xml"/>
+	        <batchtest fork="yes" todir="${report}">
+	            <fileset dir="${src}" includes="BlackJackTest.class"/>
+	        </batchtest>
+	  </junit>
+  </target>
+
+	<target name="testreport" depends="compile, test">
+        <junitreport todir="${report}">
+            <fileset dir="${report}" includes="TEST-*.xml"/>
+            <report todir="${report}"/>
+        </junitreport>
+    </target>
+
+  <target name="distribute" depends="compile, test, testreport"
+        description="Ausführbare Datei kompilieren" >
+    <echo>begin distribute...</echo>    
+    <mkdir dir="${distribute}/lib"/>
+
+    <jar jarfile="${distribute}/lib/CleanBlackJack-${TODAY_DE}.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean" depends="init"
+        description="sauber machen" >
+    <echo>clean up...</echo>    
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
