@@ -10,7 +10,7 @@
 	<property name="report"  value="${build}/junitreport"/>
 	
 	<path id="junit.class.path">
-		<pathelement location="D:/Eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar" />
+		<pathelement location="lib/junit.jar" />
 		<pathelement location="${build}" />
 	</path>
 
